@@ -9,6 +9,20 @@ import api from "./Api";
 import Card from "./Cards";
 
 function App() {
+    const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]=useState(false)
+    const  [isAddPlacePopupOpen, setIsAddPlacePopupOpen]=useState(false)
+    const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]=useState(false)
+    function handleEditAvatarClick() {
+        setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen)
+
+    }
+    function handleEditProfileClick(){
+        setIsEditProfilePopupOpen(!isEditProfilePopupOpen)
+    }
+    function handleAddPlaceClick(){
+        setIsAddPlacePopupOpen(!isAddPlacePopupOpen)
+    }
+
     const [cards,setCards]=useState([])
     const handleRequest=()=>{
         api.getInitialCards().then(response=>{
@@ -30,14 +44,16 @@ function App() {
   return (
       <div className="page">
       <Header />
-          <Main />
+          <Main   onEditAvatar={handleEditAvatarClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditProfile={handleEditProfileClick}/>
           <div className="photo-grid">
               {cards.map((item)=>{
                   return(<Card key={item._id} {...item}/>)
 
               })}
           </div>
-          <PopupWithForm name="edit-profile" title="Редактировать профиль" btnText="Сохранить" children={<fieldset className="form__personal-info">
+          <PopupWithForm isOpen={isEditProfilePopupOpen} name="edit-profile" title="Редактировать профиль" btnText="Сохранить" children={<fieldset className="form__personal-info">
               <input className="form__item " id='name' placeholder="Name" name="name" type="text" required minLength="2"
                      maxLength="40"/>
               <span className="form__item-error name-error "/>
@@ -45,7 +61,7 @@ function App() {
                      required minLength="2" maxLength="200"/>
               <span className="form__item-error profession-error"/>
           </fieldset>}/>
-          <PopupWithForm name="add-place" title="Новое место" btnText="Создать" children={<fieldset className="form__personal-info">
+          <PopupWithForm isOpen={isAddPlacePopupOpen} name="add-place" title="Новое место" btnText="Создать" children={<fieldset className="form__personal-info">
               <input className="form__item " id='title' placeholder="Название" name="title" type="text" required
                      minLength="2" maxLength="30"/>
               <span className="form__item-error title-error"/>
@@ -56,7 +72,7 @@ function App() {
           <ImagePopup/>
 
           <PopupWithForm name="confirm" title="Вы уверенны?" btnText="Да" />
-          <PopupWithForm name="update" title="Обновить аватар" btnText="Сохранить" children={<fieldset className="form__personal-info">
+          <PopupWithForm isOpen = {isEditAvatarPopupOpen} name="update" title="Обновить аватар" btnText="Сохранить" children={<fieldset className="form__personal-info">
 
               <input className="form__item " id='linkAvatar' placeholder="Ссылка на аватар" name="link" type="url"
                      required/>
