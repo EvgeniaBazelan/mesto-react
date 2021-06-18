@@ -32,9 +32,7 @@ function Main() {
                 <button type="button" className="profile__add-button" onClick={handleAddPlaceClick} />
 
             </section>
-            <section className="photo-grid">
 
-            </section>
 
 
         </main>
