@@ -12,6 +12,14 @@ function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]=useState(false)
     const  [isAddPlacePopupOpen, setIsAddPlacePopupOpen]=useState(false)
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]=useState(false)
+    // const [isEditProfilePopupClose, setIsEditProfilePopupClose]=useState(false)
+    // const  [isAddPlacePopupClose, setIsAddPlacePopupClose]=useState(false)
+    // const [isEditAvatarPopupClose, setIsEditAvatarPopupClose]=useState(false)
+    function closeAllPopups() {
+        setIsEditProfilePopupOpen(false)
+        setIsEditAvatarPopupOpen(false)
+        setIsAddPlacePopupOpen(false)
+    }
     function handleEditAvatarClick() {
         setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen)
 
@@ -53,7 +61,7 @@ function App() {
 
               })}
           </div>
-          <PopupWithForm isOpen={isEditProfilePopupOpen} name="edit-profile" title="Редактировать профиль" btnText="Сохранить" children={<fieldset className="form__personal-info">
+          <PopupWithForm onClose={closeAllPopups} isOpen={isEditProfilePopupOpen} name="edit-profile" title="Редактировать профиль" btnText="Сохранить" children={<fieldset className="form__personal-info">
               <input className="form__item " id='name' placeholder="Name" name="name" type="text" required minLength="2"
                      maxLength="40"/>
               <span className="form__item-error name-error "/>
@@ -61,7 +69,7 @@ function App() {
                      required minLength="2" maxLength="200"/>
               <span className="form__item-error profession-error"/>
           </fieldset>}/>
-          <PopupWithForm isOpen={isAddPlacePopupOpen} name="add-place" title="Новое место" btnText="Создать" children={<fieldset className="form__personal-info">
+          <PopupWithForm onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} name="add-place" title="Новое место" btnText="Создать" children={<fieldset className="form__personal-info">
               <input className="form__item " id='title' placeholder="Название" name="title" type="text" required
                      minLength="2" maxLength="30"/>
               <span className="form__item-error title-error"/>
@@ -72,7 +80,7 @@ function App() {
           <ImagePopup/>
 
           <PopupWithForm name="confirm" title="Вы уверенны?" btnText="Да" />
-          <PopupWithForm isOpen = {isEditAvatarPopupOpen} name="update" title="Обновить аватар" btnText="Сохранить" children={<fieldset className="form__personal-info">
+          <PopupWithForm onClose={closeAllPopups} isOpen = {isEditAvatarPopupOpen} name="update" title="Обновить аватар" btnText="Сохранить" children={<fieldset className="form__personal-info">
 
               <input className="form__item " id='linkAvatar' placeholder="Ссылка на аватар" name="link" type="url"
                      required/>
