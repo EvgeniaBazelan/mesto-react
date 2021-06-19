@@ -6,7 +6,7 @@ import '../index.css';
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import api from "./Api";
-import Card from "./Cards";
+
 
 function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]=useState(false)
@@ -30,16 +30,34 @@ function App() {
     function handleAddPlaceClick(){
         setIsAddPlacePopupOpen(!isAddPlacePopupOpen)
     }
+    const [user,setUser]=useState([])
+    let myId=null
+    const handleRequestUserInfo=()=>{
+        api.getUserInfo().then(response=>{
+            myId=response._id
+                console.log('response:',response)
+                const formattedUser= {userName:response.name,
+                        userDescription:response.about,
+                        userAvatar:response.avatar}
 
+
+                setUser(formattedUser)
+            }
+
+        )
+    }
+    useEffect(()=>{
+        handleRequestUserInfo()},[])
     const [cards,setCards]=useState([])
-    const handleRequest=()=>{
+    const handleRequestCards=()=>{
         api.getInitialCards().then(response=>{
             console.log('response:',response)
             const formattedCards=response.map(item=>{
                 return{
                     id:item._id,
                     link:item.link,
-                    name:item.name
+                    name:item.name,
+                    likes:item.likes.length
                 }
             })
             setCards(formattedCards)
@@ -48,19 +66,23 @@ function App() {
         )
     }
     useEffect(()=>{
-        handleRequest()},[])
+        handleRequestCards()},[])
+
   return (
       <div className="page">
       <Header />
-          <Main   onEditAvatar={handleEditAvatarClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onEditProfile={handleEditProfileClick}/>
-          <div className="photo-grid">
-              {cards.map((item)=>{
-                  return(<Card key={item._id} {...item}/>)
 
-              })}
-          </div>
+
+          <Main key={myId} userName={user.userName}  userDescription={user.userDescription} userAvatar={user.userAvatar} onEditAvatar={handleEditAvatarClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditProfile={handleEditProfileClick} children={cards} />
+
+          {/*<div className="photo-grid">*/}
+          {/*    {cards.map((item)=>{*/}
+          {/*        return(<Card key={item._id} {...item}/>)*/}
+
+          {/*    })}*/}
+          {/*</div>*/}
           <PopupWithForm onClose={closeAllPopups} isOpen={isEditProfilePopupOpen} name="edit-profile" title="Редактировать профиль" btnText="Сохранить" children={<fieldset className="form__personal-info">
               <input className="form__item " id='name' placeholder="Name" name="name" type="text" required minLength="2"
                      maxLength="40"/>
@@ -77,7 +99,7 @@ function App() {
               <span className="form__item-error link-error"/>
           </fieldset>}/>
 
-          <ImagePopup/>
+          <ImagePopup />
 
           <PopupWithForm name="confirm" title="Вы уверенны?" btnText="Да" />
           <PopupWithForm onClose={closeAllPopups} isOpen = {isEditAvatarPopupOpen} name="update" title="Обновить аватар" btnText="Сохранить" children={<fieldset className="form__personal-info">
