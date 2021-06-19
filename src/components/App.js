@@ -8,17 +8,22 @@ import ImagePopup from "./ImagePopup";
 import api from "./Api";
 
 
+
 function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen]=useState(false)
     const  [isAddPlacePopupOpen, setIsAddPlacePopupOpen]=useState(false)
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]=useState(false)
-    // const [isEditProfilePopupClose, setIsEditProfilePopupClose]=useState(false)
-    // const  [isAddPlacePopupClose, setIsAddPlacePopupClose]=useState(false)
-    // const [isEditAvatarPopupClose, setIsEditAvatarPopupClose]=useState(false)
+    const [isViewPopupOpen,setIsViewPopupOpen]=useState(false)
+
     function closeAllPopups() {
         setIsEditProfilePopupOpen(false)
         setIsEditAvatarPopupOpen(false)
         setIsAddPlacePopupOpen(false)
+        setIsViewPopupOpen(false)
+    }
+    function handleViewClick() {
+        setIsViewPopupOpen(!isViewPopupOpen)
+
     }
     function handleEditAvatarClick() {
         setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen)
@@ -67,7 +72,21 @@ function App() {
     }
     useEffect(()=>{
         handleRequestCards()},[])
-
+const [selectedCard,setSelectedCard]=useState([])
+    const handleCardClick= (item) => {
+        console.log("privet")
+        if (item !== undefined) {
+            console.log("poka")
+            const formattedCardForOpen={
+                link:item.link,
+                name:item.name,
+            }
+            setSelectedCard(formattedCardForOpen)
+            handleViewClick()
+        }
+    }
+    useEffect(()=>{
+        handleCardClick()},[])
   return (
       <div className="page">
       <Header />
@@ -75,7 +94,7 @@ function App() {
 
           <Main key={myId} userName={user.userName}  userDescription={user.userDescription} userAvatar={user.userAvatar} onEditAvatar={handleEditAvatarClick}
                   onAddPlace={handleAddPlaceClick}
-                  onEditProfile={handleEditProfileClick} children={cards} />
+                  onEditProfile={handleEditProfileClick} children={cards} onCardClick={handleCardClick}/>
 
           {/*<div className="photo-grid">*/}
           {/*    {cards.map((item)=>{*/}
@@ -99,7 +118,7 @@ function App() {
               <span className="form__item-error link-error"/>
           </fieldset>}/>
 
-          <ImagePopup />
+          <ImagePopup card={selectedCard} isOpen={isViewPopupOpen} name="view" onClose={closeAllPopups}/>
 
           <PopupWithForm name="confirm" title="Вы уверенны?" btnText="Да" />
           <PopupWithForm onClose={closeAllPopups} isOpen = {isEditAvatarPopupOpen} name="update" title="Обновить аватар" btnText="Сохранить" children={<fieldset className="form__personal-info">
