@@ -3,9 +3,10 @@
     display: flex;
     justify-content: left;
     align-items: center;
-    margin: 45px auto 40px auto;
+    margin: 0px auto;
     box-sizing: border-box;
     border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+    padding-top: 45px;
 }
 
 @media all and (max-width:900px) {

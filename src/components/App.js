@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import '../index.css';
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
-import api from "./Api";
+import api from "../utils/Api";
 
 
 
