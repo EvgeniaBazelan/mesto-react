@@ -8,6 +8,7 @@ import ImagePopup from "./ImagePopup";
 import api from "../utils/Api";
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 
 
 function App() {
@@ -71,6 +72,18 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
             console.log('response:',response)
             setCurrentUser(response)
             closeAllPopups()
+        }).catch(()=> {
+            console.log("Ошибка при смене информации о пользователе")
+        })
+    }
+    function handleUpdateAvatar(obj) {
+        api.changeAvatar(obj.avatar).then(
+            response=>{
+                setCurrentUser(response)
+                closeAllPopups()
+            }
+        ).catch(()=> {
+            console.log("Ошибка при смене аватара")
         })
     }
 
@@ -103,17 +116,11 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
           </fieldset>
           </PopupWithForm>
 
-          <ImagePopup card={selectedCard} isOpen={isViewPopupOpen} name="view" onClose={closeAllPopups}/>
+              <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+              <ImagePopup card={selectedCard} isOpen={isViewPopupOpen} name="view" onClose={closeAllPopups}/>
 
-          <PopupWithForm name="confirm" title="Вы уверенны?" btnText="Да" />
-          <PopupWithForm onClose={closeAllPopups} isOpen = {isEditAvatarPopupOpen} name="update" title="Обновить аватар" btnText="Сохранить">
-              <fieldset className="form__personal-info">
 
-              <input className="form__item " id='linkAvatar' placeholder="Ссылка на аватар" name="link" type="url"
-                     required/>
-              <span className="form__item-error linkAvatar-error"/>
-          </fieldset>
-      </PopupWithForm>
+              <PopupWithForm name="confirm" title="Вы уверенны?" btnText="Да" />
 
       <Footer />
 
