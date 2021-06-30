@@ -1,12 +1,12 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import Header from './Header'
 import Main from "./Main";
 import Footer from "./Footer";
 import '../index.css';
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
-
-
+import api from "../utils/Api";
+import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
 
 function App() {
@@ -14,6 +14,20 @@ function App() {
     const  [isAddPlacePopupOpen, setIsAddPlacePopupOpen]=useState(false)
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]=useState(false)
     const [isViewPopupOpen,setIsViewPopupOpen]=useState(false)
+    const [currentUser,setCurrentUser]=useState([])
+
+    useEffect(()=>{
+        api.getUserInfo().then(response=>{
+
+                console.log('response:',response)
+            setCurrentUser(response)
+            }
+
+        ).catch(()=> {
+            console.log("Ошибка при получении информации")
+        })},[])
+
+
 
     function closeAllPopups() {
         setIsEditProfilePopupOpen(false)
@@ -50,10 +64,11 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
             handleViewClick()
         }
     }
-    // useEffect(()=>{
-    //     handleCardClick()},[])
+
   return (
+
       <div className="page">
+          <CurrentUserContext.Provider value={currentUser}>
       <Header />
 
 
@@ -101,8 +116,9 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
 
       <Footer />
 
-
+          </CurrentUserContext.Provider>
       </div>
+
   );
 }
 

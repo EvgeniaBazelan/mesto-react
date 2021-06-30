@@ -1,29 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import Card from "./Cards";
 import api from "../utils/Api";
-
+import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
 function Main(props) {
-    const [user,setUser]=useState({})
-    // let myId=null
-    const handleRequestUserInfo=()=>{
-        api.getUserInfo().then(response=>{
-                // myId=response._id
-                console.log('response:',response)
-                const formattedUser= {userName:response.name,
-                    userDescription:response.about,
-                    userAvatar:response.avatar}
+    const currentUser=React.useContext(CurrentUserContext)
 
-
-                setUser(formattedUser)
-            }
-
-        ).catch(()=> {
-            console.log("Ошибка при получении информации")
-        })
-    }
-    useEffect(()=>{
-        handleRequestUserInfo()},[])
     const [cards,setCards]=useState([])
     const handleRequestCards=()=>{
         api.getInitialCards().then(response=>{
@@ -33,7 +15,8 @@ function Main(props) {
                         _id:item._id,
                         link:item.link,
                         name:item.name,
-                        likes:item.likes.length
+                        likes:item.likes,
+                        owner:item.owner._id
                     }
                 })
                 setCards(formattedCards)
@@ -49,12 +32,12 @@ function Main(props) {
     return(
         <main className="content">
             <section className="profile">
-                <div className="profile__avatar" style={{ backgroundImage: `url(${user.userAvatar})` }} >
+                <div className="profile__avatar" style={{ backgroundImage: `url(${currentUser.avatar})` }} >
                     <div className="profile__cover" onClick={props.onEditAvatar} />
                 </div>
                 <div className="profile__info">
-                    <h1 className="profile__name">{user.userName}</h1>
-                    <p className="profile__profession">{user.userDescription}</p>
+                    <h1 className="profile__name">{currentUser.name}</h1>
+                    <p className="profile__profession">{currentUser.about}</p>
                 </div>
                 <button type="button" className="profile__edit-button" onClick={props.onEditProfile} />
                 <button type="button" className="profile__add-button" onClick={props.onAddPlace} />
