@@ -65,6 +65,7 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
         }
     }
 
+
   return (
 
       <div className="page">
@@ -74,7 +75,7 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
 
           <Main  onEditAvatar={handleEditAvatarClick}
                   onAddPlace={handleAddPlaceClick}
-                  onEditProfile={handleEditProfileClick} onCardClick={handleCardClick}/>
+                  onEditProfile={handleEditProfileClick} onCardClick={handleCardClick} />
 
           {/*<div className="photo-grid">*/}
           {/*    {cards.map((item)=>{*/}

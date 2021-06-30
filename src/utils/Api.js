@@ -45,20 +45,22 @@
             })
             .then(this._handleResponse);
     }
-    like(cardId) {
-        return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-                method: 'PUT',
-                headers: this._headers,
-            })
-            .then(this._handleResponse);
-    }
-    dislike(cardId) {
-        return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-                method: 'DELETE',
-                headers: this._headers,
-            })
-            .then(this._handleResponse);
-    }
+     changeLikeCardStatus(cardId,parametr) {
+         if (parametr === true) {
+             return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+                 method: 'PUT',
+                 headers: this._headers,
+             })
+                 .then(this._handleResponse);
+         } else {
+             return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+                 method: 'DELETE',
+                 headers: this._headers,
+             })
+                 .then(this._handleResponse);
+         }
+     }
+
     deleteMyCard(cardId) {
         return fetch(`${this._baseUrl}/cards/${cardId}`, {
                 method: 'DELETE',

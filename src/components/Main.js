@@ -29,6 +29,20 @@ function Main(props) {
     useEffect(()=>{
         handleRequestCards()},[])
 
+    function handleCardLike(card) {
+        // Снова проверяем, есть ли уже лайк на этой карточке
+        const isLiked = card.likes.some(i => i._id === currentUser._id);
+
+        // Отправляем запрос в API и получаем обновлённые данные карточки
+        api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+            console.log(newCard)
+            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        }).catch(()=> {
+            console.log("Ошибка при смене лайка")
+        })
+    }
+
+
     return(
         <main className="content">
             <section className="profile">
@@ -45,7 +59,7 @@ function Main(props) {
             </section>
             <div className="photo-grid">
                 {cards.map((card)=>{
-                   return(<Card card={card} onCardClick={props.onCardClick} key={card._id} {...card} />)
+                   return(<Card card={card} onCardClick={props.onCardClick} onCardLike={handleCardLike} key={card._id} {...card} />)
 
              })}
                 {/*{props.children}*/}
