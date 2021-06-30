@@ -9,6 +9,8 @@ import api from "../utils/Api";
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
+
 
 
 function App() {
@@ -86,9 +88,61 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
             console.log("Ошибка при смене аватара")
         })
     }
+    const [cards,setCards]=useState([])
+    const handleRequestCards=()=>{
+        api.getInitialCards().then(response=>{
+                console.log('response:',response)
+                const formattedCards=response.map(item=>{
+                    return{
+                        _id:item._id,
+                        link:item.link,
+                        name:item.name,
+                        likes:item.likes,
+                        owner:item.owner._id
+                    }
+                })
+                setCards(formattedCards)
+            }
+
+        ).catch(()=> {
+            console.log("Ошибка при загрузке карточек")
+        })
+    }
+    useEffect(()=>{
+        handleRequestCards()},[])
+
+    function handleCardLike(card) {
+        // Снова проверяем, есть ли уже лайк на этой карточке
+        const isLiked = card.likes.some(i => i._id === currentUser._id);
+
+        // Отправляем запрос в API и получаем обновлённые данные карточки
+        api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+            console.log(newCard)
+            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        }).catch(()=> {
+            console.log("Ошибка при смене лайка")
+        })
+    }
+    function handleCardDelete(card) {
+        api.deleteMyCard(card._id).then((newCard) => {
+            console.log(newCard)
+            setCards((state) => state.filter((c) => c.owner._id !== currentUser._id));
+        }).catch(()=> {
+            console.log("Ошибка при удаление карточки")
+        })
+    }
+    function handleAddPlaceSubmit(obj) {
+        api.postNewCard(obj.name,obj.link).then((newCard)=>{
+            setCards([newCard, ...cards]);
+            closeAllPopups()
+        }).catch(()=> {
+            console.log("Ошибка при добавлении карточки")
+        })
+    }
 
 
-  return (
+
+    return (
 
       <div className="page">
           <CurrentUserContext.Provider value={currentUser}>
@@ -97,7 +151,8 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
 
           <Main  onEditAvatar={handleEditAvatarClick}
                   onAddPlace={handleAddPlaceClick}
-                  onEditProfile={handleEditProfileClick} onCardClick={handleCardClick} />
+                  onEditProfile={handleEditProfileClick} onCardClick={handleCardClick}
+                 cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
 
           {/*<div className="photo-grid">*/}
           {/*    {cards.map((item)=>{*/}
@@ -106,16 +161,7 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
           {/*    })}*/}
           {/*</div>*/}
               <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
-              <PopupWithForm onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} name="add-place" title="Новое место" btnText="Создать">
-              <fieldset className="form__personal-info">
-              <input className="form__item " id='title' placeholder="Название" name="title" type="text" required
-                     minLength="2" maxLength="30"/>
-              <span className="form__item-error title-error"/>
-              <input className="form__item " id='link' placeholder="Ссылка на картинку" name="link" type="url" required/>
-              <span className="form__item-error link-error"/>
-          </fieldset>
-          </PopupWithForm>
-
+              <AddPlacePopup onAddPlace={handleAddPlaceSubmit} onClose={closeAllPopups} isOpen={isAddPlacePopupOpen}/>
               <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
               <ImagePopup card={selectedCard} isOpen={isViewPopupOpen} name="view" onClose={closeAllPopups}/>
 

@@ -66,8 +66,8 @@ function Main(props) {
 
             </section>
             <div className="photo-grid">
-                {cards.map((card)=>{
-                   return(<Card card={card} onCardClick={props.onCardClick} onCardDelete={handleCardDelete} onCardLike={handleCardLike} key={card._id} {...card} />)
+                {props.cards.map((card)=>{
+                   return(<Card card={card} onCardClick={props.onCardClick} onCardDelete={props.onCardDelete} onCardLike={props.onCardLike} key={card._id} {...card} />)
 
              })}
                 {/*{props.children}*/}
