@@ -1,54 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import Card from "./Cards";
-import api from "../utils/Api";
+import React from 'react';
+import Card from "./Card";
+
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
 function Main(props) {
     const currentUser=React.useContext(CurrentUserContext)
 
-    const [cards,setCards]=useState([])
-    const handleRequestCards=()=>{
-        api.getInitialCards().then(response=>{
-                console.log('response:',response)
-                const formattedCards=response.map(item=>{
-                    return{
-                        _id:item._id,
-                        link:item.link,
-                        name:item.name,
-                        likes:item.likes,
-                        owner:item.owner._id
-                    }
-                })
-                setCards(formattedCards)
-            }
-
-        ).catch(()=> {
-            console.log("Ошибка при загрузке карточек")
-        })
-    }
-    useEffect(()=>{
-        handleRequestCards()},[])
-
-    function handleCardLike(card) {
-        // Снова проверяем, есть ли уже лайк на этой карточке
-        const isLiked = card.likes.some(i => i._id === currentUser._id);
-
-        // Отправляем запрос в API и получаем обновлённые данные карточки
-        api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-            console.log(newCard)
-            setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-        }).catch(()=> {
-            console.log("Ошибка при смене лайка")
-        })
-    }
-    function handleCardDelete(card) {
-        api.deleteMyCard(card._id).then((newCard) => {
-            console.log(newCard)
-            setCards((state) => state.filter((c) => c.owner._id !== currentUser._id));
-        }).catch(()=> {
-            console.log("Ошибка при удаление карточки")
-        })
-    }
 
 
     return(
