@@ -7,6 +7,7 @@ import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/Api";
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
+import EditProfilePopup from "./EditProfilePopup";
 
 
 function App() {
@@ -64,6 +65,14 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
             handleViewClick()
         }
     }
+    function  handleUpdateUser(obj) {
+        api.changeUserInfo(obj.name, obj.about).then(response=>{
+
+            console.log('response:',response)
+            setCurrentUser(response)
+            closeAllPopups()
+        })
+    }
 
 
   return (
@@ -83,17 +92,8 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
 
           {/*    })}*/}
           {/*</div>*/}
-          <PopupWithForm onClose={closeAllPopups} isOpen={isEditProfilePopupOpen} name="edit-profile" title="Редактировать профиль" btnText="Сохранить">
-              <fieldset className="form__personal-info">
-              <input className="form__item " id='name' placeholder="Name" name="name" type="text" required minLength="2"
-                     maxLength="40"/>
-              <span className="form__item-error name-error "/>
-              <input className="form__item " id='profession' placeholder="Profession" name="profession" type="text"
-                     required minLength="2" maxLength="200"/>
-              <span className="form__item-error profession-error"/>
-          </fieldset>
-      </PopupWithForm>
-          <PopupWithForm onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} name="add-place" title="Новое место" btnText="Создать">
+              <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+              <PopupWithForm onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} name="add-place" title="Новое место" btnText="Создать">
               <fieldset className="form__personal-info">
               <input className="form__item " id='title' placeholder="Название" name="title" type="text" required
                      minLength="2" maxLength="30"/>

@@ -41,6 +41,14 @@ function Main(props) {
             console.log("Ошибка при смене лайка")
         })
     }
+    function handleCardDelete(card) {
+        api.deleteMyCard(card._id).then((newCard) => {
+            console.log(newCard)
+            setCards((state) => state.filter((c) => c.owner._id !== currentUser._id));
+        }).catch(()=> {
+            console.log("Ошибка при удаление карточки")
+        })
+    }
 
 
     return(
@@ -59,7 +67,7 @@ function Main(props) {
             </section>
             <div className="photo-grid">
                 {cards.map((card)=>{
-                   return(<Card card={card} onCardClick={props.onCardClick} onCardLike={handleCardLike} key={card._id} {...card} />)
+                   return(<Card card={card} onCardClick={props.onCardClick} onCardDelete={handleCardDelete} onCardLike={handleCardLike} key={card._id} {...card} />)
 
              })}
                 {/*{props.children}*/}

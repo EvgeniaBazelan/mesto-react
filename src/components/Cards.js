@@ -17,12 +17,15 @@ function Card(props){
 
         props.onCardLike(props.card)
     }
+    function handleDeleteClick() {
+        props.onCardDelete(props.card)
+    }
 
     return(
 
             <div className="photo-grid__item">
 
-                <button type="button" className="photo-grid__item_delete" style={isOwn ?{visibility:'visible'}:{visibility:'hidden'}}/>
+                <button type="button" className="photo-grid__item_delete" onClick={handleDeleteClick} style={isOwn ?{visibility:'visible'}:{visibility:'hidden'}}/>
                 <img className="photo-grid__view" alt={`${props.name}`} src={`${props.link} `} onClick={handleClick}/>
                 <p className="photo-grid__text">{props.name}</p>
                 <button type="button" className={`${isLiked ? 'photo-grid__like photo-grid__like_active': 'photo-grid__like'}`} onClick={handleLikeClick}/>
