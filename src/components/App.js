@@ -18,12 +18,11 @@ function App() {
     const  [isAddPlacePopupOpen, setIsAddPlacePopupOpen]=useState(false)
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen]=useState(false)
     const [isViewPopupOpen,setIsViewPopupOpen]=useState(false)
-    const [currentUser,setCurrentUser]=useState([])
+    const [currentUser,setCurrentUser]=useState({})
 
     useEffect(()=>{
         api.getUserInfo().then(response=>{
-
-                console.log('response:',response)
+            console.log('response:',response)
             setCurrentUser(response)
             }
 
