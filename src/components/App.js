@@ -91,16 +91,16 @@ const [selectedCard,setSelectedCard]= useState({name: '', link: ''})
     const handleRequestCards=()=>{
         api.getInitialCards().then(response=>{
                 console.log('response:',response)
-                const formattedCards=response.map(item=>{
-                    return{
-                        _id:item._id,
-                        link:item.link,
-                        name:item.name,
-                        likes:item.likes,
-                        owner:item.owner._id
-                    }
-                })
-                setCards(formattedCards)
+                // const formattedCards=response.map(item=>{
+                //     return{
+                //         _id:item._id,
+                //         link:item.link,
+                //         name:item.name,
+                //         likes:item.likes,
+                //         owner:item.owner._id
+                //     }
+                // })
+                setCards(response)
             }
 
         ).catch(()=> {
